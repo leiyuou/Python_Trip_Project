@@ -3,11 +3,11 @@ import os
 import pandas as pd
 from prettytable import PrettyTable
 os.chdir("/Users/shanyue/Github/Python_Trip_Project")
-from graph_generator import draw_hotel_price, draw_weather
+from graph_generator import draw_hotel_price, draw_weather, draw_airline
 from NLP.nlp_analytics import get_five_top_tourism_attraction, get_word_cloud
 from map_generator import get_plan_route
 from weather_analysis import city_day_wather
-from filter_suitable_service import get_suitable_hotel
+from filter_suitable_service import get_suitable_hotel, get_suitable_airline
 
 #%%
 if(__name__ == "__main__"):
@@ -59,12 +59,12 @@ if(__name__ == "__main__"):
     print()
     print()
     print("Airline Information in Line Chart")
-    draw_weather(input_time_down, input_time_up, input_des)
+    draw_airline(input_flight_down, input_flight_up, input_des)
 
 #%%
     place_list = []
-    #airline, air_price = get_suitable_airline(input_des)
-    #place_list.append(airline)
+    airline, air_price = get_suitable_airline(input_des, input_flight_down, input_flight_up)
+    place_list.append(airline)
     hotel, hotel_price = get_suitable_hotel(input_des)
     place_list.append(hotel)
     tourism_list = get_five_top_tourism_attraction(input_des)
@@ -94,9 +94,9 @@ if(__name__ == "__main__"):
     print("Costs and distance")
     table = PrettyTable(["Item", "Money($)"])
     table.add_row(["Hotel", hotel_price])
-    #table.add_row(["Airline", air_price])
+    table.add_row(["Airline", air_price])
     table.add_row(["Bus", len(target_spots)/2*bus_ticket_price])
-    table.add_row(["Total", hotel_price+len(target_spots)*2])
+    table.add_row(["Total", hotel_price+air_price+len(target_spots)/2*bus_ticket_price])
     print(table)
     
     print("Walking Distance in city: "+ str(final_distance.round(2))+"m")

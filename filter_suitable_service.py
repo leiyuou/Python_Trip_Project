@@ -4,6 +4,12 @@ import pandas as pd
 import os
 os.chdir("/Users/shanyue/Github/Python_Trip_Project")
 
+def add_range_air(price,air_down,air_up):
+    price = int(price)
+    if(price<=(int)(air_up) and price>=(int)(air_down)):
+        return 1
+    else:
+        return 0
 
 def get_suitable_hotel(city):
     hotel = pd.read_csv("dataset/hotel_data.csv")
@@ -14,13 +20,15 @@ def get_suitable_hotel(city):
     return list(hotel_city.iloc[0])[2], list(hotel_city.iloc[0])[6]
     
 
-def get_suitable_airline(city):
-    airline = pd.read_csv("dataset/.csv")
-    airline_city = airline[(airline["city"]==city) & (airline["rate"] == "Excellent ")]
-    if(len(airline_city) == 0):
-        airline_city = airline[(airline["city"]==city) & (airline["rate"] == "Very good ")]
-    airline_city = airline_city.sort_values(by="price", ascending=True)
-    return list(airline_city.iloc[0])
+def get_suitable_airline(city, air_down, air_up):
+    airline = pd.read_excel("dataset/airline_data.xlsx")
+    airline_city = airline[(airline["ArrivalAirport"].str.contains(city))]
+    airline_city = airline_city[~airline_city["Price"].isna()]
+    airline_city["Price"] = airline_city["Price"].astype(int)
+    airline_city["price_within"] = airline_city["Price"].apply(lambda x:add_range_air(x,air_down,air_up))
+    airline_city = airline_city[airline_city["price_within"] == 1]
+    airline_city = airline_city.sort_values(by="Price", ascending=True).reset_index(drop=True)
+    return list(airline_city.iloc[0])[1], list(airline_city.iloc[0])[10]
 
 
 if(__name__=="__main__"):
