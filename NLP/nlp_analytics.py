@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from collections import Counter
 
-os.chdir('/Users/shanyue/Github/CMU-Python/project_deliver/')
+os.chdir("/Users/shanyue/Github/Python_Trip_Project/")
 
 ctrip = pd.read_csv("dataset/ctrip_cleaned_data.csv")
 
@@ -25,7 +25,6 @@ ctrip_spot.append(ctrip_BU)
 ctrip_spot.append(ctrip_AD)
 ctrip_spot.append(ctrip_KA)
 
-print(ctrip_spot)
 
 #%%
 def cleanse_text(value):
@@ -35,6 +34,18 @@ def cleanse_text(value):
         return text if len(text) > 0 else None
     else:
         return None
+
+def translate(city):
+    if(city=="Adelaide"):
+        return "阿德莱德"
+    if(city=="Sydney"):
+        return "悉尼"
+    if(city=="Brisbane"):
+        return "布里斯班"
+    if(city=="Canberra"):
+        return "堪培拉"
+    if(city=="Melbourne"):
+        return "墨尔本"
 
 #%%
 def get_word_cloud(spot):
@@ -58,7 +69,6 @@ def get_word_cloud(spot):
     # generate word cloud
     plt.rcParams['figure.figsize'] = (16, 8)
     wc = WordCloud(font_path="NLP/danchunmhxqx.ttf",background_color="white",max_words=2000)
-    print(word_freq_dict)
     wc.generate_from_frequencies(word_freq_dict)
 
     # show word cloud
@@ -69,6 +79,7 @@ def get_word_cloud(spot):
 
 #%%
 def get_five_top_tourism_attraction(city):
+    city = translate(city)
     city_df = ctrip[ctrip["city"]==city]
     city_df = city_df.groupby("place")
     city_df = city_df.aggregate(np.mean)
@@ -76,6 +87,8 @@ def get_five_top_tourism_attraction(city):
     return list(city_df.index)
 
 if __name__ == '__main__':
-    five_place_list = get_five_top_tourism_attraction("悉尼")
-    for place in five_place_list:
-        get_word_cloud(place)
+    five_place_list = get_five_top_tourism_attraction("阿德莱德")
+# =============================================================================
+#     for place in five_place_list:
+#         get_word_cloud(place)
+# =============================================================================

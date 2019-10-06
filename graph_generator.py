@@ -35,7 +35,23 @@ def add_range(price,hotel_down,hotel_up):
         return 0
 
 def draw_weather(begin_date, end_date, city_name):
-    weather_data = pd.read_excel("project_deliver/dataset/weather_data.xlsx",sheet_name=city_name)
+    weather_data = pd.read_excel("dataset/weather_data.xlsx",sheet_name=city_name)
+    weather_data["date"] = weather_data["date"].str.replace("年","-")
+    weather_data["date"] = weather_data["date"].str.replace("月","-")
+    weather_data["date"] = weather_data["date"].str.replace("日", "")
+    weather_data["within_date"] = weather_data["date"].apply(lambda x:check_date(str(x), begin_date, end_date))
+    with_in_weather = weather_data[weather_data["within_date"] == 1]
+    plt.plot(with_in_weather["date"].tolist(), with_in_weather["max_temp"].tolist())
+
+    plt.xlabel('date')
+    plt.ylabel('max_temp')
+    plt.title('Max Temperature')
+    plt.yticks([0, 25, 50])
+    plt.xticks([])
+    plt.show()
+
+def draw_airline(begin_date, end_date, city_name):
+    weather_data = pd.read_excel("dataset/weather_data.xlsx",sheet_name=city_name)
     weather_data["date"] = weather_data["date"].str.replace("年","-")
     weather_data["date"] = weather_data["date"].str.replace("月","-")
     weather_data["date"] = weather_data["date"].str.replace("日", "")
@@ -51,18 +67,17 @@ def draw_weather(begin_date, end_date, city_name):
     plt.show()
 
 def draw_hotel_price(hotel_down,hotel_up,city_name):
-    hotel_data = pd.read_excel("project_deliver/dataset/hotel_data.xlsx")
-    hotel_data = hotel_data[hotel_data["City"] == city_name]
-    hotel_data = hotel_data[~hotel_data["Price"].isna()]
-    hotel_data["Price"] = hotel_data["Price"].str[3:]
-    hotel_data["Price"] = hotel_data["Price"].astype(int)
-    hotel_data["Price_within"] = hotel_data["Price"].apply(lambda x:add_range(x,hotel_down,hotel_up))
-    hotel_data = hotel_data[hotel_data["Price_within"] == 1]
-    hotel_data["Price_range"] = hotel_data["Price"].apply(add_price_range)
+    hotel_data = pd.read_csv("dataset/hotel_data.csv")
+    hotel_data = hotel_data[hotel_data["city"] == city_name]
+    hotel_data = hotel_data[~hotel_data["price"].isna()]
+    hotel_data["price"] = hotel_data["price"].astype(int)
+    hotel_data["price_within"] = hotel_data["price"].apply(lambda x:add_range(x,hotel_down,hotel_up))
+    hotel_data = hotel_data[hotel_data["price_within"] == 1]
+    hotel_data["price_range"] = hotel_data["price"].apply(add_price_range)
     label_list = ["AU$0-AU$100", "AU$101-AU$200", "AU$201-AU$300", "AU$301-AU$400", ">AU$401"]
-    price_size = [len(hotel_data[hotel_data["Price_range"] == 0]), len(hotel_data[hotel_data["Price_range"] == 1]),\
-                  len(hotel_data[hotel_data["Price_range"] == 2]),len(hotel_data[hotel_data["Price_range"] == 3]),\
-                  len(hotel_data[hotel_data["Price_range"] == 4])]
+    price_size = [len(hotel_data[hotel_data["price_range"] == 0]), len(hotel_data[hotel_data["price_range"] == 1]),\
+                  len(hotel_data[hotel_data["price_range"] == 2]),len(hotel_data[hotel_data["price_range"] == 3]),\
+                  len(hotel_data[hotel_data["price_range"] == 4])]
     explode = [0.05, 0, 0,0,0]
     plt.pie(price_size, explode=explode, labels=label_list, autopct='%1.1f%%', shadow=False, startangle=150)
     plt.title("Hotel price pie chart")
