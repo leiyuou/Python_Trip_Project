@@ -25,8 +25,6 @@ for line_dt in load_dict['features']:
     bus_latitudes.append(line_dt['geometry']['coordinates'][1])
     bus_longitudes.append(line_dt['geometry']['coordinates'][0])
 
-
-
 def cal_distance(position_1, position_2):
     return np.sqrt(np.sum(np.square(np.array(position_1) - np.array(position_2))))/180*math.pi*6300000
 
