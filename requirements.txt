@@ -1,0 +1,8 @@
+pandas
+folium
+numpy
+datetime
+matplotlib
+prettytable
+wordcloud
+jieba

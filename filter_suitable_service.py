@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 
+############################################################
+# Based on the scraped hotel/airline data to get a suitable item for customer
+############################################################ 
+
 import pandas as pd
 import os
 os.chdir("/Users/shanyue/Github/Python_Trip_Project")

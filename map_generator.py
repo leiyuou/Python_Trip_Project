@@ -1,4 +1,9 @@
 #%%
+
+############################################################
+# This module is to generate map of the plan
+############################################################ 
+
 import pandas as pd
 import os
 os.chdir("/Users/shanyue/Github/Python_Trip_Project/")
@@ -53,10 +58,16 @@ def get_plan_route(place_list):
         target_lng.append(bus_longitudes[bus_stop])
     
     city_map = folium.Map(location=[-34.921230, 138.599503], zoom_start=15)
-    
+
     for lat, lng, label in zip(target_lat, target_lng, target_label):
         folium.Marker([lat, lng], popup=label).add_to(city_map)
-    
+
+    points = []
+    for lat, lng in zip(target_lat, target_lng):
+        points.append(tuple([lat, lng]))
+
+    folium.PolyLine(points, color="red", weight=2.5, opacity=1).add_to(city_map)
+
     # Save the map
     city_map.save("map/map.html")
     return target_label, final_distance
@@ -65,7 +76,6 @@ def get_plan_route(place_list):
 if(__name__ == "__main__"):
     df = pd.read_excel("dataset/map_place_lat_long.xlsx")
     df = list(df.values)
-    spot_list = get_plan_route(df)
-    for spot in spot_list:
+    target_label, final_distance = get_plan_route(df)
+    for spot in target_label:
         print(spot)
-        

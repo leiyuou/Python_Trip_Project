@@ -1,4 +1,9 @@
 #%%
+
+############################################################
+# This module is to generate maps of the hotel price/airline/weather
+############################################################ 
+
 import pandas as pd
 import datetime
 from matplotlib import pyplot as plt
