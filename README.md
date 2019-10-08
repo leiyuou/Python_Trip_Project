@@ -8,7 +8,7 @@
 Group name  | Andrew ID | Email
 ------------- | ------------- | -------------
 Yuanli Gu  | Content Cell | 
-Yuou Lei  | Content Cell |
+Yuou Lei  | yuoul | yuoul@andrew.cmu.edu
 Xinrui Zheng  | Content Cell |
 Shanyue Wan  | shanyuew | shanyuew@andrew.cmu.edu
 Rhea-Luz Valbuena | Content Cell | 
